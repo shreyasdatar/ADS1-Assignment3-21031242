@@ -195,7 +195,7 @@ plt.fill_between(df_ind["Time"], low, up,
                  label="fill", alpha=0.7, color = "Yellow")
 plt.xlabel("Time")
 plt.ylabel("Population")
-plt.title("")
+plt.title("Population Growth in India")
 plt.legend()
 
 print("Forcasted population")
