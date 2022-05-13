@@ -10,6 +10,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import scipy.optimize as opt
 import sklearn.cluster as cluster
+# err_ranges.py needs to be in the same folder as this python file.
 from err_ranges import err_ranges
 
 def growthfunct(t, s, k):
