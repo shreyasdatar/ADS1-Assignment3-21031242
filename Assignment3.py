@@ -14,7 +14,8 @@ from err_ranges import err_ranges
 
 def growthfunct(t, s, k):
     '''
-    
+    function to get fitted values of exponential
+    population growth.
 
     Parameters
     ----------
@@ -105,7 +106,7 @@ def makeplot(df, col1, col2):
     plt.ylabel(col2)
     plt.show()
 
-#KMeans Clusteing
+
 def kmeans(df,x,y):
     '''
     The function plots KMeans Clusters.
@@ -147,17 +148,20 @@ def kmeans(df,x,y):
     plt.xlabel(xlab)
     plt.ylabel(ylab)    
 
-    
+# Reading the dataframe  
 df_cc, df_ccT = read_data("Dataset.csv")
+
+# Making seperate dataframe for data fitting
 df_ind = df_cc[df_cc["Country Name"] == "India"]
 print(df_cc.describe())
 print(df_cc.corr())
 print(df_cc.head())
 
+# Normalising the data for clustering.
 for col in df_cc.columns[2:]:
     df_cc[col] = norm(df_cc[col])
 
-
+# Clustering features against total population.
 df_CO_TP = df_cc[["CO2 emissions (metric tons per capita)", 
                   "Population total"]].copy()
 kmeans(df_CO_TP,"CO2 emissions (metric tons per capita)","Population total")
@@ -170,7 +174,6 @@ df_PG_TP = df_cc[["Population growth (annual %)",
                   "Population total"]].copy()
 kmeans(df_PG_TP,"Population growth (annual %)","Population total")
 
-df_ind = df_cc[df_cc["Country Name"] == "India"]
 
 param, pcovar = opt.curve_fit(growthfunct, df_ind["Time"], 
                               df_ind["Population total"])
@@ -180,12 +183,16 @@ low, up = err_ranges(df_ind["Time"], growthfunct, param, sigma)
 
 print(param, pcovar, sep="\n")
 
+# Plotting the population growth and fitted population growth.
 df_ind["pop_exp"] = growthfunct(df_ind["Time"],*param)
 
 plt.figure()
-plt.plot(df_ind["Time"], df_ind["Population total"], label="data")
-plt.plot(df_ind["Time"], df_ind["pop_exp"], label="fit")
-plt.fill_between(df_ind["Time"], low, up, alpha=0.7)
+plt.plot(df_ind["Time"], df_ind["Population total"],
+         label="data", color = "Red")
+plt.plot(df_ind["Time"], df_ind["pop_exp"], 
+         label="fit", color = "Black")
+plt.fill_between(df_ind["Time"], low, up, 
+                 label="fill", alpha=0.7, color = "Yellow")
 plt.xlabel("Time")
 plt.ylabel("Population")
 plt.title("")
@@ -195,3 +202,6 @@ print("Forcasted population")
 low30, up30 = err_ranges(2030, growthfunct, param, sigma)
 print("2030 between ", low30, "and", up30)
 
+print("Forcasted population")
+low40, up40 = err_ranges(2040, growthfunct, param, sigma)
+print("2040 between ", low40, "and", up40)
